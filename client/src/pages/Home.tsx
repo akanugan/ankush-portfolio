@@ -11,6 +11,7 @@ import ResearchSection from "@/components/ResearchSection";
 import ProjectsSection from "@/components/ProjectsSection";
 import PublicationsSection from "@/components/PublicationsSection";
 import SkillsSection from "@/components/SkillsSection";
+import ResourcesSection from "@/components/ResourcesSection";
 import ContactSection from "@/components/ContactSection";
 
 export default function Home() {
@@ -27,6 +28,7 @@ export default function Home() {
       <ProjectsSection />
       <PublicationsSection />
       <SkillsSection />
+      <ResourcesSection />
       <ContactSection />
     </div>
   );

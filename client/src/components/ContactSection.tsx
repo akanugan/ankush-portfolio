@@ -74,7 +74,7 @@ export default function ContactSection() {
           {/* Section header */}
           <AnimatedSection>
             <div className="text-center mb-16">
-              <span className="section-label">// 07 — contact</span>
+              <span className="section-label">// 08 — contact</span>
               <h2
                 style={{
                   fontFamily: "'Bebas Neue', sans-serif",
