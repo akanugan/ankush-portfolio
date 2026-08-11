@@ -152,9 +152,24 @@ function vitePluginManusDebugCollector(): Plugin {
 
 const plugins = [react(), tailwindcss(), jsxLocPlugin(), vitePluginManusRuntime(), vitePluginManusDebugCollector()];
 
+/** Copy index.html → 404.html so GitHub Pages serves the SPA for /resources */
+function vitePluginSpaFallback(): Plugin {
+  return {
+    name: "spa-fallback-404",
+    closeBundle() {
+      const outDir = path.resolve(import.meta.dirname, "dist/public");
+      const indexHtml = path.join(outDir, "index.html");
+      const fallbackHtml = path.join(outDir, "404.html");
+      if (fs.existsSync(indexHtml)) {
+        fs.copyFileSync(indexHtml, fallbackHtml);
+      }
+    },
+  };
+}
+
 export default defineConfig({
   base: '/',
-  plugins,
+  plugins: [...plugins, vitePluginSpaFallback()],
   resolve: {
     alias: {
       "@": path.resolve(import.meta.dirname, "client", "src"),

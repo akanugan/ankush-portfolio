@@ -6,29 +6,34 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
+import { useLocation } from "wouter";
 
-const navLinks = [
+const sectionLinks = [
   { label: "About", href: "#about" },
   { label: "Experience", href: "#experience" },
   { label: "Research", href: "#research" },
   { label: "Projects", href: "#projects" },
   { label: "Publications", href: "#publications" },
   { label: "Skills", href: "#skills" },
-  { label: "Resources", href: "#resources" },
   { label: "Contact", href: "#contact" },
 ];
+
+const pageLinks = [{ label: "Resources", href: "/resources" }];
 
 export default function NavBar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("");
+  const [location, setLocation] = useLocation();
+  const isHome = location === "/" || location.startsWith("/#");
 
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 40);
 
-      // Determine active section
-      const sections = navLinks.map((l) => l.href.slice(1));
+      if (!isHome) return;
+
+      const sections = sectionLinks.map((l) => l.href.slice(1));
       for (let i = sections.length - 1; i >= 0; i--) {
         const el = document.getElementById(sections[i]);
         if (el && window.scrollY >= el.offsetTop - 120) {
@@ -38,16 +43,44 @@ export default function NavBar() {
       }
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [isHome]);
 
-  const handleNavClick = (href: string) => {
+  const goHome = () => {
+    setMobileOpen(false);
+    if (isHome) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      setLocation("/");
+    }
+  };
+
+  const handleSectionClick = (href: string) => {
     setMobileOpen(false);
     const id = href.slice(1);
-    const el = document.getElementById(id);
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (isHome) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+      return;
     }
+    setLocation("/");
+    window.setTimeout(() => {
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 100);
+  };
+
+  const handlePageClick = (href: string) => {
+    setMobileOpen(false);
+    setLocation(href);
+  };
+
+  const isLinkActive = (href: string) => {
+    if (href.startsWith("/")) return location === href;
+    return isHome && activeSection === href.slice(1);
   };
 
   return (
@@ -68,10 +101,7 @@ export default function NavBar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <button
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="flex items-center gap-2 group"
-          >
+          <button onClick={goHome} className="flex items-center gap-2 group">
             <div
               className="w-8 h-8 rounded-full flex items-center justify-center"
               style={{
@@ -104,12 +134,37 @@ export default function NavBar() {
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-1">
-            {navLinks.map((link) => {
-              const isActive = activeSection === link.href.slice(1);
+            {sectionLinks.map((link) => {
+              const isActive = isLinkActive(link.href);
               return (
                 <button
                   key={link.href}
-                  onClick={() => handleNavClick(link.href)}
+                  onClick={() => handleSectionClick(link.href)}
+                  className="relative px-3 py-2 text-sm transition-colors duration-200"
+                  style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontWeight: 500,
+                    color: isActive ? "#f5c842" : "rgba(232, 237, 245, 0.7)",
+                    letterSpacing: "0.03em",
+                  }}
+                >
+                  {isActive && (
+                    <motion.span
+                      layoutId="nav-indicator"
+                      className="absolute bottom-0 left-0 right-0 h-0.5 rounded-full"
+                      style={{ background: "#f5c842" }}
+                    />
+                  )}
+                  {link.label}
+                </button>
+              );
+            })}
+            {pageLinks.map((link) => {
+              const isActive = isLinkActive(link.href);
+              return (
+                <button
+                  key={link.href}
+                  onClick={() => handlePageClick(link.href)}
                   className="relative px-3 py-2 text-sm transition-colors duration-200"
                   style={{
                     fontFamily: "'DM Sans', sans-serif",
@@ -183,26 +238,31 @@ export default function NavBar() {
             }}
           >
             <div className="px-4 py-4 flex flex-col gap-1">
-              {navLinks.map((link) => (
-                <button
-                  key={link.href}
-                  onClick={() => handleNavClick(link.href)}
-                  className="text-left px-3 py-3 text-sm rounded transition-colors"
-                  style={{
-                    fontFamily: "'DM Sans', sans-serif",
-                    color:
-                      activeSection === link.href.slice(1)
+              {[...sectionLinks, ...pageLinks].map((link) => {
+                const isActive = isLinkActive(link.href);
+                return (
+                  <button
+                    key={link.href}
+                    onClick={() =>
+                      link.href.startsWith("/")
+                        ? handlePageClick(link.href)
+                        : handleSectionClick(link.href)
+                    }
+                    className="text-left px-3 py-3 text-sm rounded transition-colors"
+                    style={{
+                      fontFamily: "'DM Sans', sans-serif",
+                      color: isActive
                         ? "#f5c842"
                         : "rgba(232, 237, 245, 0.8)",
-                    borderLeft:
-                      activeSection === link.href.slice(1)
+                      borderLeft: isActive
                         ? "2px solid #f5c842"
                         : "2px solid transparent",
-                  }}
-                >
-                  {link.label}
-                </button>
-              ))}
+                    }}
+                  >
+                    {link.label}
+                  </button>
+                );
+              })}
             </div>
           </motion.div>
         )}
