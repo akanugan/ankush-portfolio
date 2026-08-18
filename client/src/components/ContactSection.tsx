@@ -101,9 +101,9 @@ export default function ContactSection() {
                   lineHeight: 1.7,
                 }}
               >
-                Open to research collaborations, industry roles in quantitative
-                analysis, ML engineering, and data science. Let's explore what
-                we can build together.
+                Open to quant research, scientific computing, and ML engineering
+                roles. Interested in teams building rigorous models on
+                large-scale data — from HPC pipelines to production AI systems.
               </p>
             </div>
           </AnimatedSection>

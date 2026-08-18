@@ -1,15 +1,15 @@
 /* ============================================================
    DESIGN: "Collision Event" — Hero Section
    Full-screen hero with particle collision background,
-   CMS detector image, and animated typography
+   interactive 3D CMS detector, and quant-focused typography
    ============================================================ */
 
 import { motion } from "framer-motion";
 import { ChevronDown, Github, Linkedin, Mail } from "lucide-react";
 import ParticleCanvas from "./ParticleCanvas";
+import CMSDetector3D from "./CMSDetector3D";
 
 const HERO_BG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663449292838/7LZbx2seopNHpyyYuMs8z3/hero-bg-6jcntJ2MmTamqjjrQhfdjD.webp";
-const DETECTOR_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663449292838/7LZbx2seopNHpyyYuMs8z3/hero-detector-h523mHPbmjvDhUx9Lvfj9i.webp";
 
 export default function HeroSection() {
   const scrollToAbout = () => {
@@ -68,7 +68,7 @@ export default function HeroSection() {
                 className="section-label mb-4 block"
                 style={{ color: "#4d9fff" }}
               >
-                // particle physicist & data scientist
+                // quant research · scientific computing · ML
               </span>
             </motion.div>
 
@@ -110,21 +110,25 @@ export default function HeroSection() {
                   maxWidth: "480px",
                 }}
               >
-                Physics PhD specializing in{" "}
+                Physics PhD building{" "}
                 <span style={{ color: "#f5c842", fontWeight: 600 }}>
-                  machine learning
-                </span>{" "}
-                and{" "}
-                <span style={{ color: "#4d9fff", fontWeight: 600 }}>
-                  statistical modeling
+                  large-scale data pipelines
                 </span>
-                . Searching for supersymmetry at{" "}
-                <span style={{ color: "#f5c842", fontWeight: 600 }}>CERN</span>{" "}
-                and building AI systems at{" "}
+                ,{" "}
                 <span style={{ color: "#4d9fff", fontWeight: 600 }}>
+                  statistical models
+                </span>
+                , and{" "}
+                <span style={{ color: "#f5c842", fontWeight: 600 }}>
+                  HPC workflows
+                </span>
+                . From petabyte-scale analysis at{" "}
+                <span style={{ color: "#4d9fff", fontWeight: 600 }}>CERN</span>{" "}
+                to AI deployment at{" "}
+                <span style={{ color: "#f5c842", fontWeight: 600 }}>
                   Brookhaven National Lab
                 </span>
-                .
+                — bridging fundamental research and quantitative methods.
               </p>
             </motion.div>
 
@@ -136,9 +140,9 @@ export default function HeroSection() {
               className="grid grid-cols-3 gap-4 mb-8"
             >
               {[
-                { value: "6+", label: "Years Research" },
-                { value: "5+", label: "Publications" },
-                { value: "CERN", label: "LHC Experiment" },
+                { value: "PB+", label: "Data Processed" },
+                { value: "6+", label: "Years HPC/ML" },
+                { value: "Bayes", label: "Inference" },
               ].map((stat) => (
                 <div
                   key={stat.label}
@@ -254,60 +258,46 @@ export default function HeroSection() {
             </motion.div>
           </div>
 
-          {/* Right: Detector image */}
+          {/* Right: Interactive 3D CMS detector */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.8, rotate: -10 }}
-            animate={{ opacity: 1, scale: 1, rotate: 0 }}
+            initial={{ opacity: 0, scale: 0.85 }}
+            animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, delay: 0.4, ease: "easeOut" }}
             className="hidden lg:flex items-center justify-center"
           >
-            <div className="relative w-full max-w-lg">
-              {/* Outer glow ring */}
+            <div className="relative w-full max-w-xl" style={{ height: "480px" }}>
               <div
-                className="absolute inset-0 rounded-full"
+                className="absolute inset-0 rounded-full pointer-events-none"
                 style={{
                   background:
-                    "radial-gradient(circle, rgba(245,200,66,0.15) 0%, transparent 70%)",
-                  transform: "scale(1.2)",
+                    "radial-gradient(circle, rgba(245,200,66,0.12) 0%, transparent 65%)",
+                  transform: "scale(1.15)",
                 }}
               />
-              {/* Rotating ring */}
               <motion.div
                 animate={{ rotate: 360 }}
-                transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-                className="absolute inset-0 rounded-full"
+                transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+                className="absolute inset-4 rounded-full pointer-events-none"
                 style={{
-                  border: "1px solid rgba(245, 200, 66, 0.2)",
-                  borderTopColor: "rgba(245, 200, 66, 0.6)",
-                  transform: "scale(1.08)",
+                  border: "1px solid rgba(245, 200, 66, 0.15)",
+                  borderTopColor: "rgba(245, 200, 66, 0.5)",
                 }}
               />
               <motion.div
                 animate={{ rotate: -360 }}
-                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                className="absolute inset-0 rounded-full"
+                transition={{ duration: 28, repeat: Infinity, ease: "linear" }}
+                className="absolute inset-8 rounded-full pointer-events-none"
                 style={{
-                  border: "1px solid rgba(77, 159, 255, 0.2)",
-                  borderBottomColor: "rgba(77, 159, 255, 0.6)",
-                  transform: "scale(1.04)",
+                  border: "1px solid rgba(77, 159, 255, 0.15)",
+                  borderBottomColor: "rgba(77, 159, 255, 0.5)",
                 }}
               />
-              {/* Main image */}
-              <img
-                src={DETECTOR_IMG}
-                alt="CMS Particle Detector"
-                className="w-full rounded-full"
-                style={{
-                  boxShadow:
-                    "0 0 60px rgba(245, 200, 66, 0.2), 0 0 120px rgba(77, 159, 255, 0.1)",
-                }}
-              />
-              {/* Floating label */}
+              <CMSDetector3D className="w-full h-full" />
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 1.2, duration: 0.5 }}
-                className="absolute -bottom-6 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full text-xs whitespace-nowrap"
+                className="absolute -bottom-2 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full text-xs whitespace-nowrap"
                 style={{
                   fontFamily: "'Fira Code', monospace",
                   background: "rgba(5, 13, 26, 0.9)",
@@ -316,7 +306,7 @@ export default function HeroSection() {
                   letterSpacing: "0.1em",
                 }}
               >
-                CMS Detector @ CERN LHC
+                CMS Detector · 3D Cross-Section
               </motion.div>
             </div>
           </motion.div>
