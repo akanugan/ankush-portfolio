@@ -27,35 +27,35 @@ function AnimatedSection({ children, delay = 0 }: { children: React.ReactNode; d
 const researchAreas = [
   {
     icon: Atom,
-    title: "Supersymmetry Searches",
+    title: "Large-Scale Data Analysis",
     color: "#f5c842",
     description:
-      "Led searches for electroweak production of charginos and neutralinos at the CMS experiment at CERN's LHC. Evaluated SUSY theories against the Standard Model using multi-billion dollar datasets.",
-    tags: ["CMS Detector", "SUSY", "LHC", "Standard Model"],
+      "Led petabyte-scale analysis pipelines at CMS/CERN — processing collision events with rigorous statistical inference, background estimation, and systematic uncertainty quantification.",
+    tags: ["PB-Scale Data", "CLs Method", "Monte Carlo", "ROOT"],
   },
   {
     icon: Brain,
     title: "Machine Learning & AI",
     color: "#4d9fff",
     description:
-      "Designed Graph Neural Networks (GNNs) improving energy prediction accuracy by 10%. Implemented attention-based neural networks for multi-jet event searches and RAG frameworks for AI deployment.",
-    tags: ["GNNs", "Attention Networks", "RAG", "PyTorch", "TensorFlow"],
+      "Designed GNNs and attention-based neural networks for high-dimensional sensor data. Deployed RAG frameworks for production AI systems — bridging research prototypes and operational pipelines.",
+    tags: ["GNNs", "Attention Networks", "RAG", "PyTorch"],
   },
   {
     icon: BarChart3,
-    title: "Statistical Modeling",
+    title: "Quantitative Methods",
     color: "#a78bfa",
     description:
-      "Applied Bayesian and frequentist statistical approaches for hypothesis testing and uncertainty quantification. Developed pairs trading strategy using Engle-Granger cointegration and Z-score thresholds.",
-    tags: ["Bayesian Statistics", "Hypothesis Testing", "Time Series", "Cointegration"],
+      "Bayesian and frequentist inference, cointegration testing, and pairs trading backtesting. Applied the same statistical rigor from particle physics to financial time series and mean-reversion strategies.",
+    tags: ["Bayesian Stats", "Cointegration", "Backtesting", "Time Series"],
   },
   {
     icon: Cpu,
-    title: "Distributed Computing",
+    title: "Scientific Computing & HPC",
     color: "#34d399",
     description:
-      "Scaled quantitative analysis workflows using HTCondor, Slurm, and CERN Grid Computing. Expanded oVirt and GlusterFS infrastructure to support large-scale statistical operations.",
-    tags: ["HTCondor", "Slurm", "CERN Grid", "oVirt", "GlusterFS"],
+      "Built distributed compute workflows on HTCondor, Slurm, and CERN Grid. Expanded HPC infrastructure (oVirt, GlusterFS) for large-scale Monte Carlo simulations and ML training at scale.",
+    tags: ["HTCondor", "Slurm", "HPC", "CUDA"],
   },
 ];
 
@@ -97,9 +97,9 @@ export default function ResearchSection() {
                 marginTop: "8px",
               }}
             >
-              RESEARCH
+              SCIENTIFIC
               <br />
-              <span style={{ color: "#4d9fff" }}>EXPERTISE</span>
+              <span style={{ color: "#4d9fff" }}>COMPUTING</span>
             </h2>
             <div
               className="h-0.5 w-16 mt-4"

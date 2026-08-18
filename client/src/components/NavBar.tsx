@@ -10,6 +10,7 @@ import { useLocation } from "wouter";
 
 const sectionLinks = [
   { label: "About", href: "#about" },
+  { label: "Detector", href: "#detector" },
   { label: "Experience", href: "#experience" },
   { label: "Research", href: "#research" },
   { label: "Projects", href: "#projects" },

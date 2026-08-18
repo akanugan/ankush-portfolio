@@ -5,7 +5,7 @@
 
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { Code2, Layers, Cloud, Cpu, Wrench } from "lucide-react";
+import { Code2, Layers, Cloud, Cpu, Sigma } from "lucide-react";
 
 function AnimatedSection({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
   const ref = useRef(null);
@@ -72,13 +72,24 @@ function SkillBar({ name, level, color, delay }: { name: string; level: number; 
 const skillCategories = [
   {
     icon: Code2,
-    title: "Programming",
+    title: "Scientific Computing",
     color: "#f5c842",
     skills: [
-      { name: "Python", level: 95 },
+      { name: "Python (NumPy/Pandas)", level: 95 },
       { name: "C / C++", level: 85 },
-      { name: "SQL", level: 80 },
-      { name: "R", level: 70 },
+      { name: "R / SQL", level: 80 },
+      { name: "MATLAB / Julia", level: 70 },
+    ],
+  },
+  {
+    icon: Sigma,
+    title: "Quant & Statistics",
+    color: "#ff6b6b",
+    skills: [
+      { name: "Bayesian Inference", level: 92 },
+      { name: "Time Series / Cointegration", level: 88 },
+      { name: "Monte Carlo Simulation", level: 90 },
+      { name: "Hypothesis Testing", level: 93 },
     ],
   },
   {
@@ -94,32 +105,21 @@ const skillCategories = [
   },
   {
     icon: Cpu,
-    title: "Distributed Systems",
+    title: "HPC & Distributed",
     color: "#a78bfa",
     skills: [
-      { name: "HTCondor", level: 90 },
-      { name: "Slurm", level: 88 },
+      { name: "HTCondor / Slurm", level: 90 },
       { name: "CERN Grid Computing", level: 85 },
-      { name: "oVirt / GlusterFS", level: 75 },
-    ],
-  },
-  {
-    icon: Wrench,
-    title: "DevOps & Tools",
-    color: "#34d399",
-    skills: [
+      { name: "CUDA / GPU Computing", level: 78 },
       { name: "Docker / Kubernetes", level: 78 },
-      { name: "Git / CI-CD", level: 88 },
-      { name: "Linux / Bash", level: 90 },
-      { name: "ROOT (CERN)", level: 85 },
     ],
   },
 ];
 
 const techBadges = [
-  { group: "Cloud", items: ["AWS", "Google Cloud"], color: "#ff6b6b" },
-  { group: "Hardware", items: ["TCA Backend Electronics", "Detector Module Integration"], color: "#f5c842" },
-  { group: "Certifications", items: ["Options 101 — Aquatic Capital", "Options 201 — Aquatic Capital"], color: "#4d9fff" },
+  { group: "Numerical Libraries", items: ["NumPy", "SciPy", "Pandas", "Statsmodels", "ROOT"], color: "#f5c842" },
+  { group: "Cloud & HPC", items: ["AWS", "Google Cloud", "HTCondor", "Slurm"], color: "#4d9fff" },
+  { group: "Quant Finance", items: ["Options 101 — Aquatic Capital", "Options 201 — Aquatic Capital", "Pairs Trading"], color: "#ff6b6b" },
 ];
 
 export default function SkillsSection() {
@@ -143,9 +143,9 @@ export default function SkillsSection() {
                 marginTop: "8px",
               }}
             >
-              TECHNICAL
+              QUANT & SCIENTIFIC
               <br />
-              <span style={{ color: "#f5c842" }}>SKILLS</span>
+              <span style={{ color: "#f5c842" }}>COMPUTING STACK</span>
             </h2>
             <div
               className="h-0.5 w-16 mt-4"

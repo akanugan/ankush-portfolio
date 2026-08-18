@@ -62,9 +62,9 @@ export default function AboutSection() {
                 marginTop: "8px",
               }}
             >
-              THE PHYSICIST
+              THE QUANT MIND
               <br />
-              <span style={{ color: "#f5c842" }}>BEHIND THE DATA</span>
+              <span style={{ color: "#f5c842" }}>BEHIND THE MODELS</span>
             </h2>
             <div
               className="h-0.5 w-16 mt-4"
@@ -93,16 +93,21 @@ export default function AboutSection() {
                     lineHeight: 1.8,
                   }}
                 >
-                  Data-driven physics Ph.D. and statistical modeling specialist
-                  with deep expertise in{" "}
+                  Physics Ph.D. with deep expertise in{" "}
                   <span style={{ color: "#f5c842", fontWeight: 600 }}>
-                    machine learning
+                    scientific computing
                   </span>
                   ,{" "}
                   <span style={{ color: "#4d9fff", fontWeight: 600 }}>
-                    quantitative analysis
+                    statistical inference
                   </span>
-                  , and model validation.
+                  , and{" "}
+                  <span style={{ color: "#f5c842", fontWeight: 600 }}>
+                    machine learning
+                  </span>
+                  . I build rigorous, production-grade models and pipelines
+                  for high-dimensional data — from LHC collision events to
+                  quantitative trading signals.
                 </p>
               </div>
             </AnimatedSection>
@@ -117,12 +122,11 @@ export default function AboutSection() {
                   marginBottom: "1.5rem",
                 }}
               >
-                Proven track record of critically evaluating complex models to
-                ensure conceptual soundness, operational efficiency, and accurate
-                performance under rigorous testing. Experience leading
-                multi-functional teams and collaborating on large-scale projects,
-                equipped to manage effective governance and mitigate model risk
-                using advanced testing techniques.
+                Proven track record designing Monte Carlo simulations, Bayesian
+                inference pipelines, and distributed compute workflows on HPC
+                clusters. Experienced in model validation, backtesting, and
+                uncertainty quantification — the same statistical rigor demanded
+                in quant research and scientific computing roles.
               </p>
             </AnimatedSection>
 
@@ -130,10 +134,10 @@ export default function AboutSection() {
             <AnimatedSection delay={0.3}>
               <div className="grid grid-cols-2 gap-3">
                 {[
-                  { label: "PhD Physics", sub: "Baylor University" },
-                  { label: "CERN / LHC", sub: "CMS Experiment" },
-                  { label: "Brookhaven Lab", sub: "Research Associate" },
-                  { label: "AI/ML Expert", sub: "RAG, GNNs, Neural Nets" },
+                  { label: "PhD Physics", sub: "Statistical Modeling" },
+                  { label: "CERN / LHC", sub: "PB-Scale Data Pipelines" },
+                  { label: "Brookhaven Lab", sub: "AI/ML Deployment" },
+                  { label: "Quant Methods", sub: "Cointegration · Backtesting" },
                 ].map((item) => (
                   <div
                     key={item.label}
