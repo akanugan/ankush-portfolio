@@ -1,0 +1,40 @@
+# Physics invariants checked by the validation agent.
+# Values are approximate tolerances for dev/synthetic runs; tighten for production.
+
+invariants:
+  cutflow_monotonic:
+    description: "Cut-flow yields must be non-increasing"
+    severity: error
+
+  min_selected_events:
+    description: "At least one dimuon candidate after all cuts"
+    min: 1
+    severity: error
+
+  jpsi_peak:
+    description: "J/ψ peak near 3.1 GeV in dimuon mass spectrum"
+    mass_gev: 3.096
+    window_gev: 0.15
+    min_entries_in_window: 1
+    severity: warning
+
+  z_peak:
+    description: "Z peak near 91.2 GeV (full-stat production runs)"
+    mass_gev: 91.1876
+    window_gev: 10.0
+    min_entries_in_window: 0
+    severity: info
+
+  mass_range:
+    description: "Dimuon mass histogram covers expected range"
+    min_gev: 0.5
+    max_gev: 200.0
+    severity: error
+
+  negative_weights:
+    description: "No negative event weights in output histogram"
+    severity: error
+
+reference:
+  publication: "CERN Open Data record 5001"
+  note: "Dimuon spectrum should show J/ψ, Υ, and Z resonances at full statistics"

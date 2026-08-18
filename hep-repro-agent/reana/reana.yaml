@@ -1,0 +1,40 @@
+version: 0.8.0
+inputs:
+  files:
+    - analysis/dimuon_processor.py
+    - analysis/cutflow.py
+    - analysis/run_analysis.py
+    - config/datasets.yaml
+    - config/invariants.yaml
+  directories:
+    - config
+    - agent
+    - analysis
+workflow:
+  type: serial
+  specification:
+    steps:
+      - name: dimuon-analysis
+        environment: "docker.io/python:3.11-slim"
+        commands:
+          - apt-get update && apt-get install -y --no-install-recommends gcc g++ && rm -rf /var/lib/apt/lists/*
+          - pip install --no-cache-dir numpy matplotlib pyyaml uproot awkward scipy
+          - python analysis/run_analysis.py --dataset cms_dimuon_2011_doublemu --max-events 50000 --output-dir outputs/reana --dry-run
+      - name: validation
+        environment: "docker.io/python:3.11-slim"
+        commands:
+          - pip install --no-cache-dir pyyaml
+          - python -c "
+            from pathlib import Path;
+            import sys; sys.path.insert(0, '.');
+            from agent.validation_agent import validate_analysis_outputs;
+            r = validate_analysis_outputs(Path('outputs/reana'));
+            import json; print(json.dumps(r.to_dict(), indent=2));
+            sys.exit(0 if r.passed else 1)
+            "
+outputs:
+  files:
+    - outputs/reana/dimuon_spectrum.png
+    - outputs/reana/cutflow.json
+    - outputs/reana/fit_results.json
+    - outputs/reana/summary.json

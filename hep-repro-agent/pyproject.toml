@@ -1,0 +1,33 @@
+[project]
+name = "hep-repro-agent"
+version = "0.1.0"
+description = "Reproducible HEP Analysis Agent — NL request to REANA workflow"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = [
+    "numpy>=1.24",
+    "matplotlib>=3.7",
+    "pyyaml>=6.0",
+    "uproot>=5.0",
+    "awkward>=2.0",
+    "scipy>=1.10",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0"]
+coffea = ["coffea>=2024.0"]
+
+[project.scripts]
+hep-agent = "agent.orchestrator:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["agent*", "analysis*", "validation*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

@@ -1,0 +1,23 @@
+# Pinned CERN Open Data datasets — do not use floating URLs in production runs.
+
+datasets:
+  cms_dimuon_2011_doublemu:
+    record: "https://opendata.cern.ch/record/5001"
+    description: "CMS 2011 DoubleMu primary dataset — dimuon mass spectrum"
+    format: NanoAODRun1
+    xrootd: "root://eospublic.cern.ch//eos/opendata/cms/derived-data/NanoAODRun1/01-Jul-22/Run2011A_DoubleMu_merged.root"
+    year: 2011
+    max_events_dev: 50000
+    max_events_production: null
+    validation_runs: "run < 170000"
+
+  cms_dimuon_2012_doublemu:
+    record: "https://opendata.cern.ch/record/6030"
+    description: "CMS 2012 DoubleMuParked — dimuon mass spectrum"
+    format: NanoAODRun1
+    xrootd: "root://eospublic.cern.ch//eos/opendata/cms/derived-data/NanoAODRun1/01-Jul-22/Run2012B_DoubleMu_merged.root"
+    year: 2012
+    max_events_dev: 50000
+    max_events_production: null
+
+default_dataset: cms_dimuon_2011_doublemu

@@ -1,0 +1,19 @@
+# Pinned container images for reproducible runs.
+
+containers:
+  analysis:
+    image: "docker.io/coffeateam/coffea-dask-cc7:0.7.22-py3.10-g7f049"
+    digest: "sha256:placeholder-pin-after-first-build"
+    description: "Coffea + Dask analysis environment"
+
+  reana_local:
+    image: "docker.io/python:3.11-slim"
+    digest: null
+    description: "Lightweight local REANA step (uproot-based dev run)"
+
+  cms_cmssw_legacy:
+    image: "docker.io/cmsopendata/cmssw_5_3_32"
+    digest: null
+    description: "Legacy CMSSW demo from REANA dimuon example"
+
+default: reana_local

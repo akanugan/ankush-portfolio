@@ -5,7 +5,7 @@
 
 import { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
-import { ExternalLink, TrendingUp, ChevronLeft, ChevronRight } from "lucide-react";
+import { ExternalLink, TrendingUp, ChevronLeft, ChevronRight, Bot } from "lucide-react";
 
 function AnimatedSection({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
   const ref = useRef(null);
@@ -25,6 +25,26 @@ function AnimatedSection({ children, delay = 0 }: { children: React.ReactNode; d
 const projects = [
   {
     id: 1,
+    title: "Reproducible HEP Analysis Agent",
+    subtitle: "NL → Coffea/ROOT → REANA workflow",
+    icon: Bot,
+    color: "#ff6b6b",
+    accent: "rgba(255, 107, 107, 0.08)",
+    border: "rgba(255, 107, 107, 0.2)",
+    link: "https://github.com/akanugan/ankush-portfolio/tree/main/hep-repro-agent",
+    description:
+      "Open-source agent that turns natural-language physics requests into reproducible CMS analyses — dataset selection, cut-flow plots, statistical fits, and containerized REANA workflows with independent validation.",
+    highlights: [
+      "First target: CMS 2011 dimuon mass spectrum from CERN Open Data",
+      "Pinned datasets/containers, sandboxed execution, full tool traces",
+      "Independent validation agent checks physics invariants before report",
+      "Guardrails: approval gates for expensive jobs, human owns final claims",
+    ],
+    tech: ["Coffea", "ROOT", "Awkward", "REANA", "Python", "CERN Open Data"],
+    category: "HEP Agents",
+  },
+  {
+    id: 2,
     title: "Pairs Trading Strategy",
     subtitle: "Statistical Arbitrage with AAPL & MSFT",
     icon: TrendingUp,
@@ -44,7 +64,7 @@ const projects = [
     category: "Quantitative Finance",
   },
   {
-    id: 2,
+    id: 3,
     title: "SUSY Search Pipeline",
     subtitle: "CMS Experiment @ LHC, CERN",
     icon: TrendingUp,
@@ -64,7 +84,7 @@ const projects = [
     category: "Particle Physics",
   },
   {
-    id: 3,
+    id: 4,
     title: "Graph Neural Network",
     subtitle: "Energy Prediction for CMS Calorimeter",
     icon: TrendingUp,
@@ -84,7 +104,7 @@ const projects = [
     category: "Deep Learning",
   },
   {
-    id: 4,
+    id: 5,
     title: "RAG Framework Deployment",
     subtitle: "AI/ML at Brookhaven National Lab",
     icon: TrendingUp,
