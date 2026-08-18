@@ -35,17 +35,22 @@ User request (NL)
 
 ```bash
 cd hep-repro-agent
-python -m venv .venv && source .venv/bin/activate
-pip install -e ".[dev]"
+pip install numpy matplotlib pyyaml uproot awkward scipy fsspec-xrootd pytest
 
-# Dry-run with synthetic events (no network / ROOT install required)
-python -m analysis.run_analysis --dry-run --output-dir outputs/demo
+# Dry-run with synthetic events (no network required)
+PYTHONPATH=. python -m agent.orchestrator "Reproduce CMS 2011 dimuon mass spectrum" --dry-run
 
-# Full agent pipeline (synthetic data)
-python -m agent.orchestrator "Reproduce the CMS 2011 dimuon mass spectrum" --dry-run
+# Production: real CERN Open Data via XRootD (requires approval gate)
+PYTHONPATH=. python -m agent.orchestrator "Reproduce CMS 2011 dimuon mass spectrum" \
+  --production --approve-expensive --max-events 50000
+
+# Run HEP Agent Benchmark (6 tasks, dry-run mode)
+PYTHONPATH=. python -m benchmark.runner
 
 # Submit to REANA (requires reana-client + credentials)
-reana-client create reana/reana.yaml
+PYTHONPATH=. python -m agent.orchestrator "Reproduce CMS dimuon spectrum" \
+  --production --approve-expensive --submit-reana
+reana-client create reana/reana-production.yaml
 reana-client submit
 ```
 
@@ -72,6 +77,25 @@ reana-client submit
 - [REANA CMS dimuon demo](https://github.com/reanahub/reana-demo-cms-dimuon-mass-spectrum)
 - [NanoAODRun1 dimuon examples](https://github.com/cms-opendata-analyses/NanoAODRun1Examples)
 - [CERN Open Data portal — record 5001](https://opendata.cern.ch/record/5001)
+
+## HEP Agent Benchmark
+
+Six progressively harder tasks in `benchmark/tasks.yaml`, scored on physics accuracy, reproducibility, tool reliability, cost, and human-review burden:
+
+| Task | Difficulty | Description |
+|------|------------|-------------|
+| T1 | 1 | Histogram reproduction |
+| T2 | 2 | Detector correction |
+| T3 | 3 | Background estimation |
+| T4 | 4 | Uncertainty propagation |
+| T5 | 4 | Statistical inference |
+| T6 | 5 | Full paper reproduction pipeline |
+
+```bash
+PYTHONPATH=. python -m benchmark.runner              # all tasks, dry-run
+PYTHONPATH=. python -m benchmark.runner --task T1    # single task
+PYTHONPATH=. python -m benchmark.runner --production --approve-expensive  # XRootD
+```
 
 ## License
 

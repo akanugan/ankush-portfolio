@@ -5,13 +5,22 @@ set -euo pipefail
 DATASET="${DATASET:-cms_dimuon_2011_doublemu}"
 MAX_EVENTS="${MAX_EVENTS:-50000}"
 OUTPUT_DIR="${OUTPUT_DIR:-outputs/reana}"
+DRY_RUN="${DRY_RUN:-0}"
 
-pip install --quiet numpy matplotlib pyyaml uproot awkward hist scipy
+pip install --quiet numpy matplotlib pyyaml uproot awkward scipy fsspec-xrootd
 
-python analysis/run_analysis.py \
-  --dataset "${DATASET}" \
-  --max-events "${MAX_EVENTS}" \
-  --output-dir "${OUTPUT_DIR}"
+if [[ "${DRY_RUN}" == "1" ]]; then
+  python analysis/run_analysis.py \
+    --dataset "${DATASET}" \
+    --max-events "${MAX_EVENTS}" \
+    --output-dir "${OUTPUT_DIR}" \
+    --dry-run
+else
+  python analysis/run_analysis.py \
+    --dataset "${DATASET}" \
+    --max-events "${MAX_EVENTS}" \
+    --output-dir "${OUTPUT_DIR}"
+fi
 
 python -c "
 from pathlib import Path

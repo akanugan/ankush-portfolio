@@ -17,9 +17,12 @@ dependencies = [
 [project.optional-dependencies]
 dev = ["pytest>=7.0"]
 coffea = ["coffea>=2024.0"]
+xrootd = ["fsspec-xrootd>=0.3"]
+reana = ["reana-client>=0.9"]
 
 [project.scripts]
 hep-agent = "agent.orchestrator:main"
+hep-benchmark = "benchmark.runner:main"
 
 [build-system]
 requires = ["setuptools>=68"]
@@ -27,7 +30,7 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["agent*", "analysis*", "validation*"]
+include = ["agent*", "analysis*", "validation*", "benchmark*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

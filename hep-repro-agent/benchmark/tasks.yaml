@@ -1,0 +1,146 @@
+# HEP Agent Benchmark — progressively harder tasks for agent evaluation.
+# Scoring dimensions: physics_accuracy, reproducibility, tool_reliability, cost, human_review_burden
+
+version: "0.1.0"
+
+scoring_weights:
+  physics_accuracy: 0.35
+  reproducibility: 0.25
+  tool_reliability: 0.20
+  cost: 0.10
+  human_review_burden: 0.10
+
+tasks:
+  - id: T1_histogram_reproduction
+    name: "Histogram reproduction"
+    difficulty: 1
+    description: "Reproduce CMS 2011 dimuon mass spectrum histogram and cut-flow from Open Data."
+    runner: benchmark.tasks.histogram_reproduction
+    mode: dry_run  # use dry_run in CI; set production for full eval
+    acceptance:
+      cutflow_monotonic: true
+      min_final_events: 1
+      plot_exists: true
+      max_tool_failures: 0
+    scoring:
+      physics_accuracy:
+        jpsi_mass_within_gev: 0.20  # only enforced when fit succeeds
+        cutflow_efficiency_min: 0.01
+      reproducibility:
+        requires_trace: true
+        requires_pinned_config: true
+      tool_reliability:
+        max_retries: 1
+      cost:
+        max_events_dry_run: 5000
+        max_events_production: 100000
+      human_review_burden:
+        auto_pass_if_validation_ok: true
+
+  - id: T2_detector_correction
+    name: "Detector correction"
+    difficulty: 2
+    description: "Apply muon pt resolution smearing correction and verify corrected spectrum shape."
+    runner: benchmark.tasks.detector_correction
+    mode: dry_run
+    acceptance:
+      correction_applied: true
+      spectrum_shift_documented: true
+    scoring:
+      physics_accuracy:
+        corrected_mean_shift_pct_max: 5.0
+      reproducibility:
+        requires_trace: true
+      tool_reliability:
+        max_retries: 2
+      cost:
+        max_events_dry_run: 3000
+      human_review_burden:
+        requires_manual_signoff: false
+
+  - id: T3_background_estimation
+    name: "Background estimation"
+    difficulty: 3
+    description: "Estimate combinatorial background via opposite-sign / same-sign ratio method."
+    runner: benchmark.tasks.background_estimation
+    mode: dry_run
+    acceptance:
+      os_ss_ratio_computed: true
+      background_subtracted_plot: true
+    scoring:
+      physics_accuracy:
+        os_ss_ratio_range: [0.5, 2.0]
+      reproducibility:
+        requires_trace: true
+      tool_reliability:
+        max_retries: 2
+      cost:
+        max_events_dry_run: 5000
+      human_review_burden:
+        requires_manual_signoff: true
+
+  - id: T4_uncertainty_propagation
+    name: "Uncertainty propagation"
+    difficulty: 4
+    description: "Propagate statistical uncertainty on J/ψ yield through cut-flow bins."
+    runner: benchmark.tasks.uncertainty_propagation
+    mode: dry_run
+    acceptance:
+      poisson_errors_computed: true
+      relative_uncertainty_bounded: true
+    scoring:
+      physics_accuracy:
+        max_relative_uncertainty: 0.5
+      reproducibility:
+        requires_trace: true
+      tool_reliability:
+        max_retries: 1
+      cost:
+        max_events_dry_run: 5000
+      human_review_burden:
+        auto_pass_if_validation_ok: true
+
+  - id: T5_statistical_inference
+    name: "Statistical inference"
+    difficulty: 4
+    description: "Fit J/ψ peak and report mass, width, and significance with uncertainties."
+    runner: benchmark.tasks.statistical_inference
+    mode: dry_run
+    acceptance:
+      fit_converged: true
+      mass_within_window_gev: 0.25
+    scoring:
+      physics_accuracy:
+        jpsi_mass_gev: 3.096
+        jpsi_mass_tolerance_gev: 0.15
+      reproducibility:
+        requires_trace: true
+      tool_reliability:
+        max_retries: 2
+      cost:
+        max_events_dry_run: 10000
+      human_review_burden:
+        requires_manual_signoff: true
+
+  - id: T6_paper_reproduction
+    name: "Paper reproduction"
+    difficulty: 5
+    description: "End-to-end pipeline: NL request → REANA workflow → validation → report."
+    runner: benchmark.tasks.paper_reproduction
+    mode: dry_run
+    acceptance:
+      validation_passed: true
+      report_generated: true
+      reana_spec_valid: true
+    scoring:
+      physics_accuracy:
+        all_invariants_pass: true
+      reproducibility:
+        requires_trace: true
+        requires_reana_yaml: true
+      tool_reliability:
+        max_retries: 3
+      cost:
+        max_events_dry_run: 5000
+      human_review_burden:
+        requires_manual_signoff: true

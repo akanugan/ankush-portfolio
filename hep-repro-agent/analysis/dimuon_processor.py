@@ -191,16 +191,23 @@ def run_dimuon_analysis(
     else:
         import uproot
 
-        with uproot.open(source) as f:
-            tree = f["Events"]
-            events = tree.arrays(
-                filter_name=[
-                    "run", "Trig_DoubleMuThresh",
-                    "Muon_*", "Dimu_*", "nDimu",
-                ],
-                entry_stop=max_events,
-                library="ak",
-            )
+        try:
+            with uproot.open(source) as f:
+                tree = f["Events"]
+                events = tree.arrays(
+                    filter_name=[
+                        "run", "Trig_DoubleMuThresh",
+                        "Muon_*", "Dimu_*", "nDimu",
+                    ],
+                    entry_stop=max_events,
+                    library="ak",
+                )
+        except ImportError as exc:
+            if "fsspec-xrootd" in str(exc) or "xrootd" in str(exc).lower():
+                raise ImportError(
+                    "XRootD access requires fsspec-xrootd. Install with: pip install fsspec-xrootd"
+                ) from exc
+            raise
 
     masses, cutflow = _select_dimuons(events)
     edges, counts = build_mass_histogram(masses)

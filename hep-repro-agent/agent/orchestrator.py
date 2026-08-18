@@ -47,6 +47,7 @@ def run_pipeline(
     dry_run: bool = False,
     max_events: int | None = 5000,
     approve_expensive: bool = False,
+    submit_reana: bool = False,
     output_dir: Path | None = None,
 ) -> dict:
     base_dir = base_dir or Path(__file__).resolve().parents[1]
@@ -67,7 +68,7 @@ def run_pipeline(
     decision = check_execution(
         max_events=max_events,
         use_xrootd=use_xrootd,
-        submit_reana=False,
+        submit_reana=submit_reana,
         approve_expensive=approve_expensive,
     )
     trace.log("guardrails", "check_execution", decision=decision.reason, allowed=decision.allowed)
@@ -84,6 +85,20 @@ def run_pipeline(
         output_dir=out,
     )
     trace.log("analysis", "complete", summary_keys=list(summary.keys()))
+
+    reana_result = None
+    if submit_reana:
+        from agent.reana_client import submission_to_dict, submit_workflow
+
+        spec = base_dir / "reana" / ("reana.yaml" if dry_run else "reana-production.yaml")
+        trace.log("reana", "submit_start", spec=str(spec))
+        sub = submit_workflow(
+            spec,
+            workflow_name=f"hep-repro-{trace.run_id}",
+            parameters={"MAX_EVENTS": str(max_events or 50000)},
+        )
+        reana_result = submission_to_dict(sub)
+        trace.log("reana", "submit_complete", **reana_result)
 
     validation = validate_analysis_outputs(out)
     trace.log("validation_agent", "complete", passed=validation.passed)
@@ -114,6 +129,8 @@ def run_pipeline(
         "report": str(report_path),
         "trace": str(trace.trace_path),
     }
+    if reana_result:
+        result["reana"] = reana_result
     (out / "pipeline_result.json").write_text(json.dumps(result, indent=2))
     return result
 
@@ -125,14 +142,19 @@ def main(argv: list[str] | None = None) -> None:
     parser.add_argument("--max-events", type=int, default=5000)
     parser.add_argument("--output-dir", type=Path, default=None)
     parser.add_argument("--approve-expensive", action="store_true")
+    parser.add_argument("--submit-reana", action="store_true", help="Submit REANA workflow after local analysis")
+    parser.add_argument("--production", action="store_true", help="Use real XRootD data (implies not dry-run)")
     args = parser.parse_args(argv)
+
+    dry_run = args.dry_run and not args.production
 
     try:
         result = run_pipeline(
             args.request,
-            dry_run=args.dry_run,
+            dry_run=dry_run,
             max_events=args.max_events,
-            approve_expensive=args.approve_expensive,
+            approve_expensive=args.approve_expensive or args.production,
+            submit_reana=args.submit_reana,
             output_dir=args.output_dir,
         )
         print(json.dumps(result, indent=2))

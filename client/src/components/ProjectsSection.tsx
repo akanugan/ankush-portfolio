@@ -33,12 +33,12 @@ const projects = [
     border: "rgba(255, 107, 107, 0.2)",
     link: "https://github.com/akanugan/ankush-portfolio/tree/main/hep-repro-agent",
     description:
-      "Open-source agent that turns natural-language physics requests into reproducible CMS analyses — dataset selection, cut-flow plots, statistical fits, and containerized REANA workflows with independent validation.",
+      "Open-source agent that turns natural-language physics requests into reproducible CMS analyses — dataset selection, cut-flow plots, statistical fits, REANA workflows, and a 6-task HEP Agent Benchmark.",
     highlights: [
       "First target: CMS 2011 dimuon mass spectrum from CERN Open Data",
       "Pinned datasets/containers, sandboxed execution, full tool traces",
       "Independent validation agent checks physics invariants before report",
-      "Guardrails: approval gates for expensive jobs, human owns final claims",
+      "HEP Agent Benchmark: 6 scored tasks from histogram repro to paper reproduction",
     ],
     tech: ["Coffea", "ROOT", "Awkward", "REANA", "Python", "CERN Open Data"],
     category: "HEP Agents",

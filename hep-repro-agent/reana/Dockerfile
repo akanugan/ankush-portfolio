@@ -11,7 +11,7 @@ COPY agent/ agent/
 COPY config/ config/
 COPY reana/run.sh reana/
 
-RUN pip install --no-cache-dir numpy matplotlib pyyaml uproot awkward scipy
+RUN pip install --no-cache-dir numpy matplotlib pyyaml uproot awkward scipy fsspec-xrootd
 
 ENV PYTHONPATH=/analysis
 ENTRYPOINT ["bash", "reana/run.sh"]
