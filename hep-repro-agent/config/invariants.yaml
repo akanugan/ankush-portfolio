@@ -14,8 +14,8 @@ invariants:
   jpsi_peak:
     description: "J/ψ peak near 3.1 GeV in dimuon mass spectrum"
     mass_gev: 3.096
-    window_gev: 0.15
-    min_entries_in_window: 1
+    window_gev: 0.08
+    min_entries_in_window: 50
     severity: warning
 
   z_peak:

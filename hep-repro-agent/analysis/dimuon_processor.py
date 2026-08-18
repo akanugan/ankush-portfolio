@@ -98,11 +98,23 @@ def _dimuons_from_muons(events: ak.Array, pt_threshold: float) -> ak.Array:
     return ak.Array(results)
 
 
-def build_mass_histogram(masses: ak.Array, name: str = "dimuon_mass") -> tuple[np.ndarray, np.ndarray]:
-    """Dimuon mass histogram bins and counts."""
+def build_mass_histogram(masses: ak.Array) -> tuple[np.ndarray, np.ndarray]:
+    """Dimuon mass histogram for spectrum plot (log-spaced low-mass region)."""
     flat = ak.to_numpy(ak.flatten(masses))
     flat = flat[flat > 0.2]
-    counts, edges = np.histogram(flat, bins=120, range=(0.2, 200.0))
+    # Finer binning below 10 GeV where resonances live; coarser above
+    low_edges = np.linspace(0.2, 10.0, 80)
+    high_edges = np.linspace(10.0, 200.0, 41)
+    edges = np.unique(np.concatenate([low_edges, high_edges]))
+    counts, edges = np.histogram(flat, bins=edges)
+    return edges, counts
+
+
+def build_jpsi_fit_histogram(masses: ak.Array) -> tuple[np.ndarray, np.ndarray]:
+    """Fine-binned histogram for J/ψ peak fit (2.5–3.5 GeV)."""
+    flat = ak.to_numpy(ak.flatten(masses))
+    flat = flat[(flat > 2.5) & (flat < 3.5)]
+    counts, edges = np.histogram(flat, bins=50, range=(2.5, 3.5))
     return edges, counts
 
 
@@ -111,26 +123,35 @@ def fit_jpsi_peak(edges: np.ndarray, counts: np.ndarray) -> dict[str, Any]:
     from scipy.optimize import curve_fit
 
     centers = 0.5 * (edges[:-1] + edges[1:])
-    window = (centers > 2.8) & (centers < 3.4)
-    x = centers[window]
-    y = counts[window]
+    # Use full provided range when already narrow (fit histogram); else window
+    if edges[-1] - edges[0] <= 2.0:
+        x, y = centers, counts
+    else:
+        window = (centers > 2.8) & (centers < 3.4)
+        x, y = centers[window], counts[window]
+
     if len(x) < 3 or y.sum() == 0:
-        return {"status": "insufficient_data"}
+        return {"status": "insufficient_data", "entries_in_window": int(y.sum())}
 
     def gauss(m, amp, mean, sigma):
         return amp * np.exp(-0.5 * ((m - mean) / sigma) ** 2)
 
     try:
         popt, pcov = curve_fit(gauss, x, y, p0=[y.max(), 3.096, 0.05], maxfev=5000)
+        # Estimate significance: amplitude / sqrt(background) with background ~ median
+        bg = max(float(np.median(y)), 1.0)
+        significance = float(popt[0] / np.sqrt(bg))
         return {
             "status": "ok",
             "amplitude": float(popt[0]),
             "mass_gev": float(popt[1]),
             "sigma_gev": float(abs(popt[2])),
             "mass_err_gev": float(np.sqrt(pcov[1, 1])) if pcov is not None else None,
+            "significance": significance,
+            "entries_in_window": int(y.sum()),
         }
     except Exception as exc:
-        return {"status": "fit_failed", "error": str(exc)}
+        return {"status": "fit_failed", "error": str(exc), "entries_in_window": int(y.sum())}
 
 
 def generate_synthetic_events(n_events: int = 5000, seed: int = 42) -> ak.Array:
@@ -211,20 +232,34 @@ def run_dimuon_analysis(
 
     masses, cutflow = _select_dimuons(events)
     edges, counts = build_mass_histogram(masses)
-    fit = fit_jpsi_peak(edges, counts)
+    fit_edges, fit_counts = build_jpsi_fit_histogram(masses)
+    fit = fit_jpsi_peak(fit_edges, fit_counts)
 
     # Save histogram plot
-    fig, axes = plt.subplots(1, 2, figsize=(12, 4))
+    fig, axes = plt.subplots(1, 3, figsize=(16, 4))
     cutflow.plot(axes[0])
     centers = 0.5 * (edges[:-1] + edges[1:])
     axes[1].step(centers, counts, where="mid", color="#f5c842")
     axes[1].set_xlabel("Dimuon mass [GeV]")
     axes[1].set_ylabel("Events")
     axes[1].set_yscale("log")
+    axes[1].set_xlim(0.2, 120)
     axes[1].set_title("Invariant mass spectrum")
+
+    fit_centers = 0.5 * (fit_edges[:-1] + fit_edges[1:])
+    axes[2].step(fit_centers, fit_counts, where="mid", color="#4d9fff")
+    axes[2].set_xlabel("Dimuon mass [GeV]")
+    axes[2].set_ylabel("Events")
+    axes[2].set_title("J/ψ fit region")
     if fit.get("status") == "ok":
-        axes[1].axvline(fit["mass_gev"], color="#ff6b6b", ls="--", label=f"J/ψ fit: {fit['mass_gev']:.3f} GeV")
-        axes[1].legend()
+        m = fit["mass_gev"]
+        s = fit["sigma_gev"]
+        x_fine = np.linspace(2.5, 3.5, 200)
+        amp = fit["amplitude"]
+        y_fit = amp * np.exp(-0.5 * ((x_fine - m) / s) ** 2)
+        axes[2].plot(x_fine, y_fit, "r--", label=f"m={m:.3f}±{fit.get('mass_err_gev', 0):.3f} GeV")
+        axes[1].axvline(m, color="#ff6b6b", ls="--", alpha=0.7)
+        axes[2].legend(fontsize=8)
     fig.tight_layout()
     plot_path = output_dir / "dimuon_spectrum.png"
     fig.savefig(plot_path, dpi=150)

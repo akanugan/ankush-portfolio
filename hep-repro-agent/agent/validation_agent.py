@@ -82,6 +82,8 @@ def validate_analysis_outputs(output_dir: Path, config_dir: Path | None = None) 
     })
     if fit_ok and not in_window:
         result.warnings.append(f"J/ψ fit mass {mass:.3f} GeV outside expected window")
+    elif fit_ok and fit.get("significance", 0) > 5:
+        result.checks[-1]["significance"] = fit.get("significance")
 
     # Trace file exists
     traces = list(output_dir.glob("trace_*.jsonl"))

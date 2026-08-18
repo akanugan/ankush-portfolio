@@ -68,8 +68,11 @@ def uncertainty_propagation(output_dir: Path, *, dry_run: bool = True, max_event
 
 
 def statistical_inference(output_dir: Path, *, dry_run: bool = True, max_events: int = 10000) -> dict[str, Any]:
-    summary = run_dimuon_analysis(None if dry_run else _dataset_url(), dry_run=dry_run, max_events=max_events, output_dir=output_dir)
+    # Production runs need higher stats for J/ψ fit convergence
+    events = 10000 if dry_run else max(max_events, 100000)
+    summary = run_dimuon_analysis(None if dry_run else _dataset_url(), dry_run=dry_run, max_events=events, output_dir=output_dir)
     result = _base_result(output_dir, summary, dry_run=dry_run)
+    result["max_events"] = events
     return result
 
 

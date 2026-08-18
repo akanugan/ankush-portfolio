@@ -112,13 +112,14 @@ tasks:
     scoring:
       physics_accuracy:
         jpsi_mass_gev: 3.096
-        jpsi_mass_tolerance_gev: 0.15
+        jpsi_mass_tolerance_gev: 0.08
       reproducibility:
         requires_trace: true
       tool_reliability:
         max_retries: 2
       cost:
         max_events_dry_run: 10000
+        max_events_production: 100000
       human_review_burden:
         requires_manual_signoff: true
 

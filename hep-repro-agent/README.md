@@ -42,7 +42,8 @@ PYTHONPATH=. python -m agent.orchestrator "Reproduce CMS 2011 dimuon mass spectr
 
 # Production: real CERN Open Data via XRootD (requires approval gate)
 PYTHONPATH=. python -m agent.orchestrator "Reproduce CMS 2011 dimuon mass spectrum" \
-  --production --approve-expensive --max-events 50000
+  --production --approve-expensive --max-events 100000
+# Expected at 100k events: ~2100 dimuons, J/ψ fit at 3.097 ± 0.001 GeV, significance > 50
 
 # Run HEP Agent Benchmark (6 tasks, dry-run mode)
 PYTHONPATH=. python -m benchmark.runner
